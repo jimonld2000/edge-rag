@@ -68,7 +68,7 @@ edge-rag/
 
 ```bash
 # Clone repository
-git clone <repository>
+git clone https://github.com/jimonld2000/edge-rag
 cd edge-rag
 
 # Create virtual environment
@@ -144,20 +144,20 @@ Outputs:
 
 ### Mode A: Vector Baseline
 - **Description**: Direct embedding similarity
-- **Speed**: ⚡⚡⚡ (Fastest)
-- **Accuracy**: ⭐⭐ (Low)
+- **Speed**: Fastest
+- **Accuracy**: Low
 - **Process**: Log → Embed → Search → Return Top-1
 
 ### Mode B: Naive RAG
 - **Description**: Vector retrieval + LLM reasoning
-- **Speed**: ⚡⚡ (Medium)
-- **Accuracy**: ⭐⭐⭐ (Medium)
+- **Speed**: Medium
+- **Accuracy**: Medium
 - **Process**: Log → Embed → Retrieve → LLM Reason → Return ID
 
 ### Mode C: HyDE (Recommended)
 - **Description**: Hypothesis generation + retrieval + reasoning
-- **Speed**: ⚡ (Slowest)
-- **Accuracy**: ⭐⭐⭐⭐ (Highest)
+- **Speed**: Slowest
+- **Accuracy**: Highest
 - **Process**: Log → Concept Generation → Embed → Retrieve → LLM Reason → Return ID
 
 ## 🗂️ Key Components
@@ -175,7 +175,7 @@ Centralized configuration for:
 
 ### Core Analysis (`src/core/`)
 Implements three analysis modes:
-- `hyde_analysis()`: HyDE pipeline (recommended)
+- `hyde_analysis()`: HyDE pipeline
 - `naive_rag_analysis()`: Simple RAG pipeline
 - `baseline_analysis()`: Vector similarity baseline
 
@@ -213,7 +213,7 @@ Look for "HyDE EXCLUSIVE WINS": cases where Naive RAG fails but HyDE succeeds. T
 - **Safe Abstentions**: System returns "Unknown" (safe)
 - **Hallucinations**: System returns wrong ID (unsafe)
 
-## 🔧 Configuration
+## Configuration
 
 Edit `src/config.py` to customize:
 
@@ -238,48 +238,15 @@ Typical results on labeled EVTX dataset:
 
 | Mode | Accuracy | Latency | Safety |
 |------|----------|---------|--------|
-| Baseline (A) | 25-30% | <100ms | High |
-| Naive RAG (B) | 35-40% | 1-2s | Medium |
-| HyDE (C) | 50-60% | 3-5s | High |
+| Baseline (A) | 5-7% | <100ms | High |
+| Naive RAG (B) | 10-12% | 4-5s | Medium |
+| HyDE (C) | 23-26% | 20-24s | High |
 
 *Note: Actual results depend on data quality, model configuration, and technique diversity*
 
-## 📚 API Reference
 
-### Core Functions
 
-```python
-from src.core import hyde_analysis, baseline_analysis, naive_rag_analysis
-from src.parsers import parse_evtx
-from src.evaluation import analyze_results
-
-# Analyze a log file
-log_content = parse_evtx("path/to/file.evtx")
-result = hyde_analysis(log_content, table)
-# result = {
-#     'id': 'T1003',
-#     'confidence': 'High',
-#     'reasoning': 'explanation',
-#     'total_time': 3.45
-# }
-
-# Analyze results
-analysis = analyze_results("final_results.csv")
-```
-
-### Benchmarking
-
-```python
-from src.inference import BenchmarkRunner
-
-runner = BenchmarkRunner()
-results = runner.run_benchmark(
-    evtx_folder="path/to/evtx",
-    output_file="results.csv"
-)
-```
-
-## 🧪 Testing
+## Testing
 
 Run tests (when implemented):
 
@@ -287,7 +254,7 @@ Run tests (when implemented):
 pytest tests/
 ```
 
-## 📄 Input Data Format
+## Input Data Format
 
 ### Gold Labels CSV (`gold_labels.csv`)
 
@@ -313,34 +280,25 @@ event2.evtx,Execution,T1059
 ]
 ```
 
-## 🤝 Contributing
+## About the project
 
-Guidelines for contributions:
-1. Maintain modular structure in `src/`
-2. Add tests in `tests/`
-3. Update docstrings with full descriptions
-4. Keep scripts simple and focused
+This project was created as a research for the KES 2026 conference http://kes2026.kesinternational.org/index.php. 
+Future development and research ar expected.
 
-## 📝 License
+## License
 
 See LICENSE file for details.
 
-## 🔗 References
+## References
 
 - [MITRE ATT&CK Framework](https://attack.mitre.org/)
 - [Hypothetical Document Embeddings (HyDE)](https://arxiv.org/abs/2212.10496)
 - [LanceDB Vector Database](https://lancedb.com/)
 - [Ollama LLM](https://ollama.ai/)
 
-## 📞 Support
-
-For issues or questions, refer to:
-1. Project README and docstrings
-2. Inline comments in module code
-3. Configuration parameters in `src/config.py`
 
 ---
 
-**Version**: 0.1.0  
-**Last Updated**: 2025  
-**Maintainer**: EDGE-RAG Research Team
+**Version**: 0.1.1 
+**Last Updated**: 20256 
+**Maintainer**: Daniel Jimon
