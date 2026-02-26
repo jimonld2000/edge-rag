@@ -1,8 +1,8 @@
 # EDGE-RAG: Event Detection with Guided Embeddings and Retrieval-Augmented Generation
 
-A sophisticated system for analyzing Windows Event Logs (EVTX) using MITRE ATT&CK knowledge and advanced retrieval-augmented generation (RAG) techniques.
+A system for analyzing Windows Event Logs (EVTX) using MITRE ATT&CK knowledge and advanced retrieval-augmented generation (RAG) techniques, built for research purposes.
 
-## 📋 Overview
+## Overview
 
 EDGE-RAG implements a hybrid approach to security event analysis by:
 
@@ -15,7 +15,7 @@ EDGE-RAG implements a hybrid approach to security event analysis by:
 4. **Benchmarking Performance** across accuracy and latency dimensions
 5. **Analyzing Results** with detailed metrics and visualizations
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 edge-rag/
@@ -56,7 +56,7 @@ edge-rag/
 └── README.md
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -140,7 +140,7 @@ Outputs:
 - Performance visualizations
 - Label validation
 
-## 📊 Analysis Modes
+## Analysis Modes
 
 ### Mode A: Vector Baseline
 - **Description**: Direct embedding similarity
@@ -160,7 +160,7 @@ Outputs:
 - **Accuracy**: Highest
 - **Process**: Log → Concept Generation → Embed → Retrieve → LLM Reason → Return ID
 
-## 🗂️ Key Components
+## Key Components
 
 ### Configuration (`src/config.py`)
 Centralized configuration for:
@@ -199,7 +199,7 @@ Implements three analysis modes:
 - `clean_xml_to_string()`: Parse event XML
 - `safe_json_parse()`: Robust JSON parsing from LLM
 
-## 📊 Results Interpretation
+## Results Interpretation
 
 ### Accuracy Metrics
 - **Strict Match**: Exact MITRE ID match (e.g., T1003.001)
@@ -232,7 +232,7 @@ LOG_TRUNCATION_LENGTH = 1000
 MAX_RETRIEVAL_RESULTS = 3
 ```
 
-## 📈 Performance Expectations
+## Performance Expectations
 
 Typical results on labeled EVTX dataset:
 
