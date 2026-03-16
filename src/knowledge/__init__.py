@@ -33,7 +33,8 @@ def fetch_mitre_data():
         dict: STIX object collection
     """
     print(f"📥 Downloading MITRE Enterprise ATT&CK data from {MITRE_URL}...")
-    response = requests.get(MITRE_URL)
+    # 🛡️ Sentinel: Add timeout to prevent hanging requests/DoS
+    response = requests.get(MITRE_URL, timeout=10)
     response.raise_for_status()
     return response.json()
 
