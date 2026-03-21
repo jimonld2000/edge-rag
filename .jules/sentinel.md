@@ -1,0 +1,4 @@
+## 2024-05-24 - XML External Entity (XXE) Vulnerability in EVTX Parsing
+**Vulnerability:** The application was using `lxml.etree.fromstring()` to parse raw XML extracted from Windows Event Logs (EVTX) without disabling external entity resolution. This created a severe XML External Entity (XXE) vulnerability where a maliciously crafted or tampered event log could attempt to access sensitive local files or execute Server-Side Request Forgery (SSRF) when the log was processed.
+**Learning:** EVTX logs are essentially structured XML and can be modified or spoofed by attackers. When converting or parsing this data, it's vital to assume the structure is untrusted, particularly when the system uses powerful parsers like `lxml` which support entity resolution by default.
+**Prevention:** Always explicitly disable external entity resolution when parsing XML using `etree.XMLParser(resolve_entities=False)`. Provide this parser instance to `etree.fromstring()`.
