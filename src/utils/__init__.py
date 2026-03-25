@@ -31,7 +31,11 @@ def clean_xml_to_string(xml_string):
         str: Cleaned text representation or error message
     """
     try:
-        root = etree.fromstring(xml_string)
+        # Prevent XXE vulnerabilities by explicitly disabling entity resolution
+        parser = etree.XMLParser(resolve_entities=False)
+        # Handle string input that might contain XML declarations
+        xml_bytes = xml_string.encode('utf-8') if isinstance(xml_string, str) else xml_string
+        root = etree.fromstring(xml_bytes, parser=parser)
         lines = []
         
         for elem in root.iter():
