@@ -7,3 +7,7 @@
 **Vulnerability:** Server-Side Request Forgery (SSRF) and Denial of Service (DoS) risks were present because `lxml.etree.XMLParser` allowed network access to fetch external DTDs.
 **Learning:** While `resolve_entities=False` prevents traditional XXE, the parser can still make network requests to retrieve external Document Type Definitions (DTDs) if `no_network=True` is not explicitly set.
 **Prevention:** Always initialize `etree.XMLParser(resolve_entities=False, no_network=True)` when parsing untrusted XML to completely isolate the parser from external network interactions.
+## 2024-05-15 - CSV Injection via LLM Output
+**Vulnerability:** A CSV/Formula Injection vulnerability existed where untrusted strings (e.g., event logs or LLM outputs) starting with `=`, `+`, `-`, or `@` could be interpreted as formulas when opened in Excel or other spreadsheet software, potentially leading to command execution or data exfiltration.
+**Learning:** LLM outputs and external log data are inherently untrusted and can contain malicious payloads specifically crafted to target downstream tools (like spreadsheet applications) even if they are just being saved for benchmark records.
+**Prevention:** Always sanitize dataframe columns (especially `object` or string types) before exporting to CSV by prepending a single quote (`'`) to values that start with dangerous characters (`=`, `+`, `-`, `@`).
