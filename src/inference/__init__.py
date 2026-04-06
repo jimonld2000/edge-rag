@@ -1,11 +1,9 @@
 """Benchmarking and evaluation framework."""
 
-import time
 import pandas as pd
 import re
 from pathlib import Path
 from tqdm import tqdm
-import lancedb
 
 from src.config import (
     DB_PATH, GOLD_LABELS_FILE, OUTPUT_FILE, EVTX_FOLDER
@@ -124,6 +122,12 @@ class BenchmarkRunner:
 
         # Save results
         df_results = pd.DataFrame(results_data)
+
+        # Sanitize for CSV Injection (Formula Injection)
+        for col in df_results.select_dtypes(include=['object', 'string']).columns:
+            mask = df_results[col].astype(str).str.startswith(('=', '+', '-', '@'))
+            df_results.loc[mask, col] = "'" + df_results.loc[mask, col].astype(str)
+
         df_results.to_csv(output_file, index=False)
         print(f"Benchmark saved to {output_file}")
         
