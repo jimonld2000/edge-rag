@@ -124,6 +124,12 @@ class BenchmarkRunner:
 
         # Save results
         df_results = pd.DataFrame(results_data)
+
+        # Sanitize text columns to prevent CSV Formula Injection
+        for col in df_results.select_dtypes(include=['object', 'string']).columns:
+            mask = df_results[col].astype(str).str.match(r'^[\=\+\-\@]')
+            df_results.loc[mask, col] = "'" + df_results.loc[mask, col].astype(str)
+
         df_results.to_csv(output_file, index=False)
         print(f"Benchmark saved to {output_file}")
         
