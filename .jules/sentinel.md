@@ -7,3 +7,7 @@
 **Vulnerability:** Server-Side Request Forgery (SSRF) and Denial of Service (DoS) risks were present because `lxml.etree.XMLParser` allowed network access to fetch external DTDs.
 **Learning:** While `resolve_entities=False` prevents traditional XXE, the parser can still make network requests to retrieve external Document Type Definitions (DTDs) if `no_network=True` is not explicitly set.
 **Prevention:** Always initialize `etree.XMLParser(resolve_entities=False, no_network=True)` when parsing untrusted XML to completely isolate the parser from external network interactions.
+## 2024-05-18 - CSV/Formula Injection in Data Export
+**Vulnerability:** CSV Injection (Formula Injection) was possible because untrusted LLM outputs ("Pred" column) were written directly to a CSV file without sanitization. If opened in spreadsheet applications, crafted inputs starting with `=, +, -, @` could execute arbitrary formulas.
+**Learning:** Pandas `to_csv` does not automatically neutralize formula-triggering characters. Even "AI-generated" content must be treated as untrusted input, especially when it acts on attacker-controlled log files.
+**Prevention:** Always sanitize string/object type columns in pandas DataFrames prior to exporting to CSV by prepending a single quote (`'`) to values that start with `=, +, -, @` (e.g., `df['col'].astype(str).str.startswith(...)`).

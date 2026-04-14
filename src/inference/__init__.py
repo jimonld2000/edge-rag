@@ -124,6 +124,15 @@ class BenchmarkRunner:
 
         # Save results
         df_results = pd.DataFrame(results_data)
+
+        # Sanitize data to prevent CSV Injection
+        for col in df_results.select_dtypes(include=['object', 'string']).columns:
+            # Convert to string and check if it starts with formula-triggering characters
+            mask = df_results[col].astype(str).str.startswith(('=', '+', '-', '@'))
+            # Prepend single quote to neutralize formula execution
+            if mask.any():
+                df_results.loc[mask, col] = "'" + df_results.loc[mask, col].astype(str)
+
         df_results.to_csv(output_file, index=False)
         print(f"Benchmark saved to {output_file}")
         
