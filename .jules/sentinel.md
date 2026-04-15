@@ -7,3 +7,7 @@
 **Vulnerability:** Server-Side Request Forgery (SSRF) and Denial of Service (DoS) risks were present because `lxml.etree.XMLParser` allowed network access to fetch external DTDs.
 **Learning:** While `resolve_entities=False` prevents traditional XXE, the parser can still make network requests to retrieve external Document Type Definitions (DTDs) if `no_network=True` is not explicitly set.
 **Prevention:** Always initialize `etree.XMLParser(resolve_entities=False, no_network=True)` when parsing untrusted XML to completely isolate the parser from external network interactions.
+## 2026-04-15 - Prompt Injection in RAG Pipeline
+**Vulnerability:** Prompt injection was possible because raw, untrusted user inputs (event logs and context) were directly concatenated into LLM prompts without proper separation from instructions.
+**Learning:** Malicious payloads within logs or retrieved context could override system instructions, causing the LLM to behave unpredictably or execute injected commands instead of its intended analysis task.
+**Prevention:** Always wrap untrusted inputs in XML-style tags (e.g., `<log_data>`, `<retrieved_context>`) and explicitly instruct the model in the system prompt to treat content within these tags as data only, ignoring any instructions found within them.
