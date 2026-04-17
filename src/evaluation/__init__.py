@@ -75,7 +75,7 @@ def analyze_results(results_file):
         pivot = df.pivot(index='File', columns='Mode', values='Soft_Match')
         
         if 'B_Naive' in pivot.columns and 'C_HyDE' in pivot.columns:
-            hyde_wins = pivot[(pivot['B_Naive'] == False) & (pivot['C_HyDE'] == True)]
+            hyde_wins = pivot[(~pivot['B_Naive']) & (pivot['C_HyDE'])]
             
             print("\n" + "="*50)
             print(f"🏆 HyDE EXCLUSIVE WINS: {len(hyde_wins)} files")
@@ -105,7 +105,7 @@ def analyze_failures(results_file):
     # Analyze each mode
     for mode in ['A_Baseline', 'B_Naive', 'C_HyDE']:
         mode_df = df[df['Mode'] == mode]
-        failures = mode_df[mode_df['Strict_Match'] == False]
+        failures = mode_df[~mode_df['Strict_Match']]
         total_failures = len(failures)
 
         if 'Pred' not in failures.columns:
