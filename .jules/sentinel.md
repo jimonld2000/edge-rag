@@ -7,3 +7,7 @@
 **Vulnerability:** Server-Side Request Forgery (SSRF) and Denial of Service (DoS) risks were present because `lxml.etree.XMLParser` allowed network access to fetch external DTDs.
 **Learning:** While `resolve_entities=False` prevents traditional XXE, the parser can still make network requests to retrieve external Document Type Definitions (DTDs) if `no_network=True` is not explicitly set.
 **Prevention:** Always initialize `etree.XMLParser(resolve_entities=False, no_network=True)` when parsing untrusted XML to completely isolate the parser from external network interactions.
+## 2026-05-07 - Prevent LLM Prompt Injection via XML Tags and HTML Escaping
+**Vulnerability:** Untrusted log data, search concepts, and retrieved contexts were passed directly into LLM prompts in `src/core/__init__.py`, allowing potential prompt injection attacks.
+**Learning:** Wrapping untrusted input in XML tags (e.g., `<log_data>`) and instructing the LLM to treat them as data is effective, but requires `html.escape()` to prevent tag breakout (e.g., via `</log_data>`).
+**Prevention:** Always apply `html.escape()` to untrusted content and wrap it in XML-style tags within the 'user' role, with explicit system instructions to ignore commands inside the tags.
