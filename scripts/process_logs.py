@@ -7,8 +7,6 @@ and displays results dynamically.
 """
 
 import random
-from pathlib import Path
-import json
 
 from src.config import EVTX_FOLDER, DB_PATH, MAX_SAMPLE_FILES
 from src.parsers import parse_evtx, get_evtx_files
@@ -33,7 +31,7 @@ if __name__ == "__main__":
     files = get_evtx_files(EVTX_FOLDER, recursive=True)
     
     if not files:
-        print(f"No EVTX files found!")
+        print("No EVTX files found!")
         exit(1)
     
     # Sample files if too many

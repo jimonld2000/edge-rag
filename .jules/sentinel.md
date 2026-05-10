@@ -7,3 +7,7 @@
 **Vulnerability:** Server-Side Request Forgery (SSRF) and Denial of Service (DoS) risks were present because `lxml.etree.XMLParser` allowed network access to fetch external DTDs.
 **Learning:** While `resolve_entities=False` prevents traditional XXE, the parser can still make network requests to retrieve external Document Type Definitions (DTDs) if `no_network=True` is not explicitly set.
 **Prevention:** Always initialize `etree.XMLParser(resolve_entities=False, no_network=True)` when parsing untrusted XML to completely isolate the parser from external network interactions.
+## 2024-05-10 - Mitigate LLM Prompt Injection via XML Tags
+**Vulnerability:** LLM components (`ollama.chat`) were directly interpolating untrusted data (like `log_text`), which is vulnerable to prompt injection (instructions hidden inside logs).
+**Learning:** Always use `html.escape()` to sanitize untrusted content, and wrap it in XML-style tags (e.g. `<log_data>`). Instruct the LLM to treat content in these tags strictly as data.
+**Prevention:** Ensure any dynamically generated inputs to the LLM are sanitized and enclosed in strict XML boundaries to prevent breakout.
