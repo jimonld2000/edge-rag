@@ -1,10 +1,17 @@
-#!/usr/bin/env python3
 """
 Analyze Benchmark Results
 
 Processes benchmark results and generates detailed analysis including
 accuracy metrics, failure modes, and performance comparison.
 """
+
+
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.evaluation import analyze_results, analyze_failures, validate_labels
 from src.evaluation.visualization import (
@@ -13,6 +20,8 @@ from src.evaluation.visualization import (
     plot_accuracy_vs_latency
 )
 from src.config import OUTPUT_FILE, KNOWLEDGE_FILE, GOLD_LABELS_FILE
+
+
 
 if __name__ == "__main__":
     print("="*60)

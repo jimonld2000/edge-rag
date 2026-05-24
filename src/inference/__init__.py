@@ -11,7 +11,7 @@ from src.config import (
     DB_PATH, GOLD_LABELS_FILE, OUTPUT_FILE, EVTX_FOLDER
 )
 from src.parsers import parse_evtx, get_evtx_files
-from src.core import baseline_analysis, naive_rag_analysis, hyde_analysis
+from src.core import baseline_analysis, naive_rag_analysis, hyde_analysis, direct_slm_analysis
 from src.knowledge.database import get_database_table
 
 
@@ -95,6 +95,7 @@ class BenchmarkRunner:
             result_a = baseline_analysis(log_content, self.table)
             result_b = naive_rag_analysis(log_content, self.table)
             result_c = hyde_analysis(log_content, self.table)
+            result_direct = direct_slm_analysis(log_content)
 
             # Record Results
             results_data.append({
@@ -120,6 +121,14 @@ class BenchmarkRunner:
                 "Pred": result_c.get('id', 'Unknown'),
                 "Strict_Match": result_c.get('id') == true_label,
                 "Time": result_c.get('total_time', 0)
+            })
+            results_data.append({
+                "File": filename,
+                "Mode": "D_Direct_SLM",
+                "True": true_label,
+                "Pred": result_direct.get('id', 'Unknown'),
+                "Strict_Match": result_direct.get('id') == true_label,
+                "Time": result_direct.get('total_time', 0)
             })
 
         # Save results

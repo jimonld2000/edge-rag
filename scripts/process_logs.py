@@ -47,19 +47,19 @@ if __name__ == "__main__":
     results_summary = []
     
     for file_path in files:
-        print(f"\n📄 Analyzing: {file_path.parent.name}/{file_path.name}")
+        print(f"\n Analyzing: {file_path.parent.name}/{file_path.name}")
         
         # Parse
         log_content = parse_evtx(str(file_path))
         if not log_content:
-            print("  ❌ [SKIP] Could not parse file")
+            print("   [SKIP] Could not parse file")
             continue
         
         # Analyze
         try:
             result = hyde_analysis(log_content, table)
             
-            print(f"  ✅ MITRE ID:    {result.get('id', 'N/A')}")
+            print(f"     MITRE ID:    {result.get('id', 'N/A')}")
             print(f"     Confidence: {result.get('confidence', 'N/A')}")
             reasoning = result.get('reasoning', 'N/A')
             print(f"     Reasoning:  {reasoning[:100]}...")
@@ -73,7 +73,7 @@ if __name__ == "__main__":
                 "time": result.get('total_time', 0)
             })
         except Exception as e:
-            print(f"  ❌ [ERROR] {e}")
+            print(f" [ERROR] {e}")
     
     # Summary Report
     print("\n" + "="*60)
@@ -89,4 +89,4 @@ if __name__ == "__main__":
         )
     
     print("="*60)
-    print(f"✅ Analysis complete! Processed {len(results_summary)} files")
+    print(f" Analysis complete! Processed {len(results_summary)} files")

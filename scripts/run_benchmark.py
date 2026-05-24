@@ -6,6 +6,13 @@ Benchmarks all three analysis modes (Baseline, Naive RAG, HyDE) against
 labeled EVTX files and generates performance metrics.
 """
 
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 from src.inference import BenchmarkRunner
 from src.config import EVTX_FOLDER, OUTPUT_FILE, DB_PATH, GOLD_LABELS_FILE
 
@@ -25,5 +32,5 @@ if __name__ == "__main__":
         output_file=OUTPUT_FILE
     )
     
-    print(f"\n✅ Benchmark complete! Results saved to {OUTPUT_FILE}")
+    print(f"\n Benchmark complete! Results saved to {OUTPUT_FILE}")
     print(f"   Total runs: {len(results)}")

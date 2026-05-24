@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 from tqdm import tqdm
 
-MITRE_URL = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json"
+MITRE_URL = "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json"
 
 
 def clean_text(text):
@@ -101,9 +101,9 @@ def build_knowledge_base(output_file="mitre_knowledge.json"):
     data = fetch_mitre_data()
     knowledge_base = parse_mitre_data(data)
     
-    print(f"💾 Saving {len(knowledge_base)} techniques to {output_file}...")
+    print(f" Saving {len(knowledge_base)} techniques to {output_file}...")
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(knowledge_base, f, indent=2)
-    print("✅ Done.")
+    print(" Done.")
     
     return knowledge_base

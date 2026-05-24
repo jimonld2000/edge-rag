@@ -4,6 +4,7 @@ import pandas as pd
 import json
 import os
 from pathlib import Path
+import math
 
 
 def get_parent_id(mitre_id):
@@ -46,7 +47,7 @@ def analyze_results(results_file):
     print("       SCIENTIFIC BENCHMARK REPORT")
     print("="*50)
     
-    modes = ['A_Baseline', 'B_Naive', 'C_HyDE']
+    modes = ['A_Baseline', 'B_Naive', 'C_HyDE', 'D_Direct_SLM', 'E_Cloud_Upper_Bound']
     analysis = {}
     
     for mode in modes:
@@ -54,22 +55,33 @@ def analyze_results(results_file):
             continue
         
         subset = df[df['Mode'] == mode]
+        n = len(subset)
+        if n == 0: continue
+            
         strict_acc = subset['Strict_Match'].mean() * 100
-        soft_acc = subset['Soft_Match'].mean() * 100
+        p_soft = subset['Soft_Match'].mean()
+        soft_acc = p_soft * 100
+        
+        # 95% Confidence Interval for Accuracy (Wilson/Standard Error)
+        ci_95 = 1.96 * math.sqrt((p_soft * (1 - p_soft)) / n) * 100
+        
         avg_latency = subset['Time'].mean()
+        std_latency = subset['Time'].std()
         
         analysis[mode] = {
             'strict_accuracy': strict_acc,
             'soft_accuracy': soft_acc,
+            'soft_ci_95': ci_95,
             'avg_latency': avg_latency,
-            'count': len(subset)
+            'latency_std': std_latency,
+            'count': n
         }
         
         print(f"\nMODE: {mode}")
         print(f"  Strict Accuracy: {strict_acc:.1f}%")
-        print(f"  Soft Accuracy:   {soft_acc:.1f}%  (Use this for paper)")
-        print(f"  Avg Latency:     {avg_latency:.2f}s")
-
+        print(f"  Soft Accuracy:   {soft_acc:.1f}% (±{ci_95:.1f}%)  <-- USE THIS CI IN PAPER")
+        print(f"  Latency:         {avg_latency:.2f}s (±{std_latency:.2f}s)")
+        
     # Find HyDE wins vs Naive
     if 'B_Naive' in df['Mode'].values and 'C_HyDE' in df['Mode'].values:
         pivot = df.pivot(index='File', columns='Mode', values='Soft_Match')
@@ -78,7 +90,7 @@ def analyze_results(results_file):
             hyde_wins = pivot[(pivot['B_Naive'] == False) & (pivot['C_HyDE'] == True)]
             
             print("\n" + "="*50)
-            print(f"🏆 HyDE EXCLUSIVE WINS: {len(hyde_wins)} files")
+            print(f" HyDE EXCLUSIVE WINS: {len(hyde_wins)} files")
             print("(Cases where Naive Failed BUT HyDE Succeeded)")
             print("-" * 50)
             
@@ -166,6 +178,6 @@ def validate_labels(labels_file, knowledge_file):
         if len(errors) > 5:
             print(f"  ... and {len(errors)-5} more.")
     else:
-        print("✅ All labels look like valid MITRE IDs.")
+        print(" All labels look like valid MITRE IDs.")
     
     print("="*50)
